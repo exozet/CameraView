@@ -85,5 +85,6 @@ class SurfaceCameraPreview extends CameraPreview<SurfaceView, SurfaceHolder> {
     @Override
     public void takeScreenshot(ScreenshotListener screenshotListener) {
         Log.w(SurfaceCameraPreview.class.getSimpleName(), "takeScreenshot not implemented");
+        screenshotListener.onScreenshot(null);
     }
 }

@@ -37,6 +37,12 @@ android {
         main.java.srcDirs += 'src/main/utils'
         main.java.srcDirs += 'src/main/gles'
     }
+
+    android {
+        lintOptions {
+            abortOnError false
+        }
+    }
 }
 
 dependencies {

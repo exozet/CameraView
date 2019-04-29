@@ -1,26 +1,20 @@
 package com.otaliastudios.cameraview.demo;
 
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.otaliastudios.cameraview.CameraOptions;
 import com.otaliastudios.cameraview.CameraView;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class ControlView<Value> extends LinearLayout implements Spinner.OnItemSelectedListener {
 
@@ -70,7 +64,7 @@ public class ControlView<Value> extends LinearLayout implements Spinner.OnItemSe
             spinner.setEnabled(false);
             spinner.setAlpha(0.8f);
             spinner.setAdapter(new ArrayAdapter(getContext(),
-                    R.layout.spinner_text, new String[]{ "Not supported." }));
+                    R.layout.spinner_text, new String[]{"Not supported."}));
             spinner.setSelection(0, false);
         } else {
             spinner.setEnabled(true);
@@ -95,7 +89,8 @@ public class ControlView<Value> extends LinearLayout implements Spinner.OnItemSe
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {}
+    public void onNothingSelected(AdapterView<?> adapterView) {
+    }
 
     private String stringify(Value value) {
         if (value instanceof Integer) {

@@ -120,5 +120,6 @@ class TextureCameraPreview extends CameraPreview<TextureView, SurfaceTexture> {
     @Override
     public void takeScreenshot(ScreenshotListener screenshotListener) {
         Log.w(TextureCameraPreview.class.getSimpleName(), "takeScreenshot not implemented");
+        screenshotListener.onScreenshot(null);
     }
 }

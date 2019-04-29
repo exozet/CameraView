@@ -3,28 +3,25 @@ package com.otaliastudios.cameraview.demo;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.otaliastudios.cameraview.CameraException;
 import com.otaliastudios.cameraview.CameraListener;
 import com.otaliastudios.cameraview.CameraLogger;
 import com.otaliastudios.cameraview.CameraOptions;
 import com.otaliastudios.cameraview.CameraView;
-import com.otaliastudios.cameraview.Frame;
-import com.otaliastudios.cameraview.FrameProcessor;
-import com.otaliastudios.cameraview.GlCameraPreview;
-import com.otaliastudios.cameraview.PictureResult;
 import com.otaliastudios.cameraview.Mode;
+import com.otaliastudios.cameraview.PictureResult;
+import com.otaliastudios.cameraview.ScreenshotListener;
 import com.otaliastudios.cameraview.VideoResult;
 
 import java.io.File;
@@ -48,10 +45,11 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         camera.setLifecycleOwner(this);
         camera.addCameraListener(new Listener());
 
-        camera.takeScreenshot(new GlCameraPreview.ScreenshotListener() {
+        camera.takeScreenshot(new ScreenshotListener() {
             @Override
-            public void onScreenshot(Bitmap bitmap) {
-
+            public void onScreenshot(@Nullable Bitmap bitmap) {
+                if (bitmap == null)
+                    camera.takePictureSnapshot();
             }
         });
 
@@ -133,12 +131,24 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.edit: edit(); break;
-            case R.id.capturePicture: capturePicture(); break;
-            case R.id.capturePictureSnapshot: capturePictureSnapshot(); break;
-            case R.id.captureVideo: captureVideo(); break;
-            case R.id.captureVideoSnapshot: captureVideoSnapshot(); break;
-            case R.id.toggleCamera: toggleCamera(); break;
+            case R.id.edit:
+                edit();
+                break;
+            case R.id.capturePicture:
+                capturePicture();
+                break;
+            case R.id.capturePictureSnapshot:
+                capturePictureSnapshot();
+                break;
+            case R.id.captureVideo:
+                captureVideo();
+                break;
+            case R.id.captureVideoSnapshot:
+                captureVideoSnapshot();
+                break;
+            case R.id.toggleCamera:
+                toggleCamera();
+                break;
         }
     }
 

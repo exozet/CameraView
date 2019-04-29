@@ -1,19 +1,20 @@
 package com.otaliastudios.cameraview;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * A CameraPreview takes in input stream from the {@link CameraController}, and streams it
  * into an output surface that belongs to the view hierarchy.
  *
- * @param <T> the type of view which hosts the content surface
+ * @param <T>      the type of view which hosts the content surface
  * @param <Output> the type of output, either {@link android.view.SurfaceHolder} or {@link android.graphics.SurfaceTexture}
  */
-abstract class CameraPreview<T extends View, Output> {
+abstract class CameraPreview<T extends View, Output> implements ITakeScreenshots {
 
     protected final static CameraLogger LOG = CameraLogger.create(CameraPreview.class.getSimpleName());
 
@@ -24,7 +25,9 @@ abstract class CameraPreview<T extends View, Output> {
     // After that, CameraView will need a new layout pass to adapt to the Preview size.
     interface SurfaceCallback {
         void onSurfaceAvailable();
+
         void onSurfaceChanged();
+
         void onSurfaceDestroyed();
     }
 
@@ -131,13 +134,16 @@ abstract class CameraPreview<T extends View, Output> {
     }
 
     // Public for mockito (CameraViewTest)
-    public void onResume() {}
+    public void onResume() {
+    }
 
     // Public for mockito (CameraViewTest)
-    public void onPause() {}
+    public void onPause() {
+    }
 
     // Public for mockito (CameraViewTest)
-    public void onDestroy() {}
+    public void onDestroy() {
+    }
 
     final boolean hasSurface() {
         return mOutputSurfaceWidth > 0 && mOutputSurfaceHeight > 0;
@@ -147,7 +153,7 @@ abstract class CameraPreview<T extends View, Output> {
      * Here we must crop the visible part by applying a > 1 scale to one of our
      * dimensions. This way our internal aspect ratio (mOutputSurfaceWidth / mOutputSurfaceHeight)
      * will match the preview size aspect ratio (mInputStreamWidth / mInputStreamHeight).
-     *
+     * <p>
      * There might still be some absolute difference (e.g. same ratio but bigger / smaller).
      * However that should be already managed by the framework.
      */
@@ -164,6 +170,7 @@ abstract class CameraPreview<T extends View, Output> {
     /**
      * Whether we are cropping the output.
      * If false, this means that the output image will match the visible bounds.
+     *
      * @return true if cropping
      */
     /* not final for tests */ boolean isCropping() {

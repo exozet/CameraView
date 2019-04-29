@@ -2,6 +2,7 @@ package com.otaliastudios.cameraview.demo;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -21,6 +22,7 @@ import com.otaliastudios.cameraview.CameraOptions;
 import com.otaliastudios.cameraview.CameraView;
 import com.otaliastudios.cameraview.Frame;
 import com.otaliastudios.cameraview.FrameProcessor;
+import com.otaliastudios.cameraview.GlCameraPreview;
 import com.otaliastudios.cameraview.PictureResult;
 import com.otaliastudios.cameraview.Mode;
 import com.otaliastudios.cameraview.VideoResult;
@@ -45,6 +47,13 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         camera = findViewById(R.id.camera);
         camera.setLifecycleOwner(this);
         camera.addCameraListener(new Listener());
+
+        camera.takeScreenshot(new GlCameraPreview.ScreenshotListener() {
+            @Override
+            public void onScreenshot(Bitmap bitmap) {
+
+            }
+        });
 
         findViewById(R.id.edit).setOnClickListener(this);
         findViewById(R.id.capturePicture).setOnClickListener(this);

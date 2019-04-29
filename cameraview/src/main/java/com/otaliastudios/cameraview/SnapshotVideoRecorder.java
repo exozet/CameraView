@@ -32,6 +32,11 @@ class SnapshotVideoRecorder extends VideoRecorder implements GlCameraPreview.Ren
     private int mDesiredState = STATE_NOT_RECORDING;
     private int mTextureId = 0;
 
+    public void takeScreenshot(ScreenshotListener screenshotListener) {
+        if (mPreview != null)
+            mPreview.takeScreenshot(screenshotListener);
+    }
+
     SnapshotVideoRecorder(@NonNull VideoResult stub, @Nullable VideoResultListener listener, @NonNull GlCameraPreview preview) {
         super(stub, listener);
         mPreview = preview;
@@ -71,9 +76,15 @@ class SnapshotVideoRecorder extends VideoRecorder implements GlCameraPreview.Ren
             height = height % 2 == 0 ? height : height + 1;
             String type = "";
             switch (mResult.codec) {
-                case H_263: type = "video/3gpp"; break; // MediaFormat.MIMETYPE_VIDEO_H263;
-                case H_264: type = "video/avc"; break; // MediaFormat.MIMETYPE_VIDEO_AVC:
-                case DEVICE_DEFAULT: type = "video/avc"; break;
+                case H_263:
+                    type = "video/3gpp";
+                    break; // MediaFormat.MIMETYPE_VIDEO_H263;
+                case H_264:
+                    type = "video/avc";
+                    break; // MediaFormat.MIMETYPE_VIDEO_AVC:
+                case DEVICE_DEFAULT:
+                    type = "video/avc";
+                    break;
             }
             LOG.w("Creating frame encoder. Rotation:", mResult.rotation);
             TextureMediaEncoder.Config config = new TextureMediaEncoder.Config(width, height,

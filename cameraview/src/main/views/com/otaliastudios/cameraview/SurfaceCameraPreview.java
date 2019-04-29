@@ -3,6 +3,8 @@ package com.otaliastudios.cameraview;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -80,5 +82,8 @@ class SurfaceCameraPreview extends CameraPreview<SurfaceView, SurfaceHolder> {
         return SurfaceHolder.class;
     }
 
-
+    @Override
+    public void takeScreenshot(ScreenshotListener screenshotListener) {
+        Log.w(SurfaceCameraPreview.class.getSimpleName(), "takeScreenshot not implemented");
+    }
 }

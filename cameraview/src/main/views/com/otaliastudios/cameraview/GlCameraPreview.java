@@ -1,17 +1,22 @@
 package com.otaliastudios.cameraview;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.ShortBuffer;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -195,6 +200,55 @@ class GlCameraPreview extends CameraPreview<GLSurfaceView, SurfaceTexture> imple
         for (RendererFrameCallback callback : mRendererFrameCallbacks) {
             callback.onRendererFrame(mInputSurfaceTexture, mScaleX, mScaleY);
         }
+
+       int mWidth = mOutputSurfaceWidth;
+       int mHeight = mOutputSurfaceHeight;
+
+        if (screenshot) {
+            int screenshotSize = mWidth * mHeight;
+            Log.v(GlCameraPreview.class.getSimpleName(), "screenshot width=" + mWidth + " height=" + mHeight);
+            ByteBuffer bb = ByteBuffer.allocateDirect(screenshotSize * 4);
+            bb.order(ByteOrder.nativeOrder());
+            gl.glReadPixels(0, 0, mWidth, mHeight, GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, bb);
+            int pixelsBuffer[] = new int[screenshotSize];
+            bb.asIntBuffer().get(pixelsBuffer);
+            bb = null;
+            Bitmap bitmap = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.RGB_565);
+            bitmap.setPixels(pixelsBuffer, screenshotSize - mWidth, -mWidth, 0, 0, mWidth, mHeight);
+            pixelsBuffer = null;
+
+            short sBuffer[] = new short[screenshotSize];
+            ShortBuffer sb = ShortBuffer.wrap(sBuffer);
+
+            sb.rewind();
+
+            bitmap.copyPixelsToBuffer(sb);
+
+            //Making created bitmap (from OpenGL points) compatible with Android bitmap
+            for (int i = 0; i < screenshotSize; ++i) {
+                short v = sBuffer[i];
+                sBuffer[i] = (short) (((v & 0x1f) << 11) | (v & 0x7e0) | ((v & 0xf800) >> 11));
+            }
+            sb.rewind();
+            bitmap.copyPixelsFromBuffer(sb);
+
+            lastScreenshot = bitmap;
+            screenshotListener.onScreenshot(lastScreenshot);
+            screenshotListener = null;
+
+            screenshot = false;
+        }
+    }
+
+    private Bitmap lastScreenshot;
+
+    private volatile boolean screenshot = false;
+
+    private ScreenshotListener screenshotListener;
+
+    public void takeScreenshot(ScreenshotListener screenshotListener) {
+        this.screenshotListener = screenshotListener;
+        screenshot = true;
     }
 
     @NonNull

@@ -56,6 +56,11 @@ public class CameraView extends FrameLayout implements LifecycleObserver {
     private HashMap<Gesture, GestureAction> mGestureMap = new HashMap<>(4);
     private Preview mPreview;
 
+    public void takeScreenshot(GlCameraPreview.ScreenshotListener screenshotListener) {
+        if (mCameraPreview instanceof GlCameraPreview)
+            mCameraPreview.takeScreenshot(screenshotListener);
+    }
+
     // Components
     /* for tests */ CameraCallbacks mCameraCallbacks;
     private CameraPreview mCameraPreview;
